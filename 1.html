@@ -1,10 +1,76 @@
 <!DOCTYPE html>
-<html>
-    <head lang="ja">
-        <meta charset="UTF-8">
-    <title>一つ目</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    </head>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Favorite Character</title>
+    <link rel="stylesheet" type="text/css" href="css/1.css">
+</head>
 <body>
-    <h1>一つ目</h1>
+
+    <header>
+        <h1>My Favorite Character</h1>
+        <p>私がいちばん大好きなキャラクターを紹介します！</p>
+    </header>
+
+    <div class="container">
+        <main class="profile-card">
+            <!-- キャラクターの画像（手持ちの画像があれば src="画像パス" に変更してください） -->
+            <img src="https://via.placeholder.com/180" alt="キャラクター画像" class="character-img">
+            
+            <h2 class="character-name">キャラクター名</h2>
+            <div class="character-title">登場作品：作品タイトル</div>
+
+            <table class="profile-table">
+                <tr>
+                    <th>誕生日</th>
+                    <td>〇月〇日</td>
+                </tr>
+                <tr>
+                    <th>性格</th>
+                    <td>明るくて前向き、ちょっと天然</td>
+                </tr>
+                <tr>
+                    <th>好きなもの</th>
+                    <td>甘いもの、お昼寝</td>
+                </tr>
+            </table>
+
+            <div class="highlights">
+                <h3>✨ ここが最大の推しポイント！</h3>
+                <p>
+                    普段はのんびりしていて可愛いのに、いざという時に仲間を全力で守るギャップがたまりません！ストーリーの第〇話で見せたあの笑顔は全人類に見てほしいです。
+                </p>
+            </div>
+
+            <!-- インタラクティブな「いいね」機能 -->
+            <div class="like-section">
+                <button class="like-btn" id="likeBtn">❤️ 推す！</button>
+                <div class="like-count"><span id="count">0</span> 回推されました</div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 推し紹介ファンページ</p>
+    </footer>
+
+    <script>
+        // いいねボタンのカウントアップ処理
+        const likeBtn = document.getElementById('likeBtn');
+        const countSpan = document.getElementById('count');
+        let count = 0;
+
+        likeBtn.addEventListener('click', () => {
+            count++;
+            countSpan.textContent = count;
+            
+            // クリックしたときのプチアニメーション
+            likeBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                likeBtn.style.transform = 'none';
+            }, 100);
+        });
+    </script>
 </body>
+</html>
