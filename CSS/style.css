@@ -1,26 +1,27 @@
 body {
-  background-color: white;
+  background-color: #111111; 
+  color: #ffffff;            
+  font-family: 'Impact', Arial, sans-serif; 
+  padding: 60px;
 }
 
-h1{
-  font-family: Arial, sans-serif;
-  font-size: 120px;
-  font-weight: bold;
+h1 {
+  font-size: 100px;
+  font-weight: 900;
   font-style: italic;
-  font-variant: small-caps;
-  font-stretch: condensed;
-  font-size-adjust: 0.5;
-  font-kerning: normal;
-  text-decoration: underline;
   text-transform: uppercase;
-    color: black;
+  text-align: right;      
+  line-height: 0.9;
+  color: #ff3366;          
+  margin-bottom: 60px;
 }
-p{font-family: Arial, serif;
-  font-size: 30px;
-  font-weight: absolute;
-  text-decoration: none;
-  text-transform: capitalize;
-  text-indent: 50px;
-  text-align: right;
 
+p {
+  font-size: 24px;
+  font-weight: 300;         
+  text-align: right;        
+  max-width: 500px;
+  margin-left: auto;        
+  line-height: 1.8;
+  letter-spacing: 1px;
 }
