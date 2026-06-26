@@ -3,5 +3,24 @@ body {
 }
 
 h1{
+  font-family: Arial, sans-serif;
+  font-size: 120px;
+  font-weight: bold;
+  font-style: italic;
+  font-variant: small-caps;
+  font-stretch: condensed;
+  font-size-adjust: 0.5;
+  font-kerning: normal;
+  text-decoration: underline;
+  text-transform: uppercase;
     color: black;
+}
+p{font-family: Arial, serif;
+  font-size: 30px;
+  font-weight: absolute;
+  text-decoration: none;
+  text-transform: capitalize;
+  text-indent: 50px;
+  text-align: right;
+
 }
