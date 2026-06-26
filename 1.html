@@ -3,52 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Favorite Character</title>
-    <link rel="stylesheet" type="text/css" href="css/1.css">
+    <title>推しキャラクター紹介＆ランキングポータル</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            text-align: center;
+            padding: 3rem 1rem;
+            position: relative;
+        }
+
+        header h1 { margin: 0; font-size: 2.5rem; }
+        header p { margin: 0.5rem 0 0; opacity: 0.9; }
+
+        /* 戻るボタン（キャラクターページ用） */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            display: none; /* 初期は非表示 */
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* ページの表示・非表示を切り替えるクラス */
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 【トップページ用デザイン】 --- */
+        .ranking-section {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2.5rem;
+        }
+
+        .ranking-section h2 { margin-top: 0; color: #764ba2; text-align: center; }
+
+        .ranking-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 6px solid #cbd5e0;
+        }
+        .ranking-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* 順位バッジ */
+        .ranking-item.rank-0 { border-left-color: #ffd700; background: #fffdf0; }
+        .ranking-item.rank-1 { border-left-color: #c0c0c0; background: #fafdff; }
+        .ranking-item.rank-2 { border-left-color: #cd7f32; background: #fff9f5; }
+
+        .menu-title {
+            text-align: center;
+            color: #4a5568;
+            margin-top: 2rem;
+        }
+
+        /* リンクボタン一覧 */
+        .char-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .menu-btn {
+            background: #fff;
+            border: 2px solid #764ba2;
+            color: #764ba2;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .menu-btn:hover {
+            background: #764ba2;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(118, 75, 162, 0.3);
+        }
+
+        /* --- 【キャラクター詳細ページ用デザイン】 --- */
+        .profile-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+            text-align: center;
+        }
+
+        .character-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+
+        .character-name { font-size: 2rem; margin: 0; color: #2d3748; }
+        .character-title { color: #764ba2; font-weight: bold; margin: 0.5rem 0 2rem; }
+
+        .profile-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        .profile-table th, .profile-table td { padding: 1rem; border-bottom: 1px solid #edf2f7; }
+        .profile-table th { width: 30%; color: #718096; }
+
+        .highlights {
+            text-align: left;
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2.5rem;
+        }
+        .highlights h3 { margin-top: 0; color: #2d3748; }
+
+        .like-btn {
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 117, 140, 0.4);
+            transition: transform 0.1s;
+        }
+        .like-btn:active { transform: scale(0.95); }
+        .like-count { margin-top: 0.5rem; font-size: 0.9rem; color: #718096; }
+
+        footer { text-align: center; padding: 2rem; color: #a0aec0; font-size: 0.85rem; }
+    </style>
 </head>
 <body>
 
     <header>
-        <h1>My Favorite Character</h1>
-        <p>私がいちばん大好きなキャラクターを紹介します！</p>
+        <button class="back-btn" id="backBtn" onclick="showPage('top')">⬅ トップに戻る</button>
+        <h1 id="mainTitle">My Favorite Characters</h1>
+        <p id="subTitle">大好きな3人の紹介＆リアルタイム推しランキング！</p>
     </header>
 
     <div class="container">
-        <main class="profile-card">
-            <!-- キャラクターの画像（手持ちの画像があれば src="画像パス" に変更してください） -->
-            <img src="https://via.placeholder.com/180" alt="キャラクター画像" class="character-img">
-            
-            <h2 class="character-name">キャラクター名</h2>
-            <div class="character-title">登場作品：作品タイトル</div>
+        
+        <!-- ==================== 🏠 トップページ ==================== -->
+        <div id="page-top" class="page active">
+            <!-- 👑 ランキング（ここに残します） -->
+            <section class="ranking-section">
+                <h2>👑 現在の推しランキング</h2>
+                <ol class="ranking-list" id="rankingList"></ol>
+            </section>
 
-            <table class="profile-table">
-                <tr>
-                    <th>誕生日</th>
-                    <td>〇月〇日</td>
-                </tr>
-                <tr>
-                    <th>性格</th>
-                    <td>明るくて前向き、ちょっと天然</td>
-                </tr>
-                <tr>
-                    <th>好きなもの</th>
-                    <td>甘いもの、お昼寝</td>
-                </tr>
-            </table>
-
-            <div class="highlights">
-                <h3>✨ ここが最大の推しポイント！</h3>
-                <p>
-                    普段はのんびりしていて可愛いのに、いざという時に仲間を全力で守るギャップがたまりません！ストーリーの第〇話で見せたあの笑顔は全人類に見てほしいです。
-                </p>
+            <h3 class="menu-title">👇 キャラクターの詳細を見る</h3>
+            <div class="char-menu">
+                <button class="menu-btn" onclick="showPage('char1')">キャラA のページ</button>
+                <button class="menu-btn" onclick="showPage('char2')">キャラB のページ</button>
+                <button class="menu-btn" onclick="showPage('char3')">キャラC のページ</button>
             </div>
+        </div>
 
-            <!-- インタラクティブな「いいね」機能 -->
-            <div class="like-section">
-                <button class="like-btn" id="likeBtn">❤️ 推す！</button>
-                <div class="like-count"><span id="count">0</span> 回推されました</div>
-            </div>
-        </main>
+        <!-- ==================== 👤 キャラA のページ ==================== -->
+        <div id="page-char1" class="page">
+            <main class="profile-card">
+                <img src="https://via.placeholder.com/160" alt="キャラ1" class="character-img">
+                <h2 class="character-name">キャラA</h2>
+                <div class="character-title">登場作品：作品タイトルX</div>
+                <table class="profile-table">
+                    <tr><th>誕生日</th><td>1月10日</td></tr>
+                    <tr><th>性格</th><td>クールで天才肌</td></tr>
+                    <tr><th>好きなもの</th><td>珈琲、読書</td></tr>
+                </table>
+                <div class="highlights">
+                    <h3>✨ 推す理由</h3>
+                    <p>一見冷たいけれど、実は誰よりも仲間想いなツンデレなところが最高です！</p>
+                </div>
+                <button class="like-btn" onclick="pushLike('char1')">❤️ 推す！</button>
+                <div class="like-count"><span id="count-char1">0</span> 回推されました</div>
+            </main>
+        </div>
+
+        <!-- ==================== 👤 キャラB のページ ==================== -->
+        <div id="page-char2" class="page">
+            <main class="profile-card">
+                <img src="https://via.placeholder.com/160" alt="キャラ2" class="character-img">
+                <h2 class="character-name">キャラB</h2>
+                <div class="character-title">登場作品：作品タイトルY</div>
+                <table class="profile-table">
+                    <tr><th>誕生日</th><td>5月23日</td></tr>
+                    <tr><th>性格</th><td>元気いっぱいのムードメーカー</td></tr>
+                    <tr><th>好きなもの</th><td>ハンバーグ、運動</td></tr>
+                </table>
+                <div class="highlights">
+                    <h3>✨ 推す理由</h3>
+                    <p>いるだけで画面が明るくなる太陽のような存在。笑顔が一番の武器です！</p>
+                </div>
+                <button class="like-btn" onclick="pushLike('char2')">❤️ 推す！</button>
+                <div class="like-count"><span id="count-char2">0</span> 回推されました</div>
+            </main>
+        </div>
+
+        <!-- ==================== 👤 キャラC のページ ==================== -->
+        <div id="page-char3" class="page">
+            <main class="profile-card">
+                <img src="https://via.placeholder.com/160" alt="キャラ3" class="character-img">
+                <h2 class="character-name">キャラC</h2>
+                <div class="character-title">登場作品：作品タイトルZ</div>
+                <table class="profile-table">
+                    <tr><th>誕生日</th><td>9月3日</td></tr>
+                    <tr><th>性格</th><td>おっとり優しい、隠れ大食い</td></tr>
+                    <tr><th>好きなもの</th><td>和菓子、お茶</td></tr>
+                </table>
+                <div class="highlights">
+                    <h3>✨ 推す理由</h3>
+                    <p>いつもニコニコしていて癒やされますが、戦闘時の頼もしさが異常です。</p>
+                </div>
+                <button class="like-btn" onclick="pushLike('char3')">❤️ 推す！</button>
+                <div class="like-count"><span id="count-char3">0</span> 回推されました</div>
+            </main>
+        </div>
+
     </div>
 
     <footer>
@@ -56,21 +283,73 @@
     </footer>
 
     <script>
-        // いいねボタンのカウントアップ処理
-        const likeBtn = document.getElementById('likeBtn');
-        const countSpan = document.getElementById('count');
-        let count = 0;
+        // データ管理
+        const characters = [
+            { id: 'char1', name: 'キャラA', count: 0 },
+            { id: 'char2', name: 'キャラB', count: 0 },
+            { id: 'char3', name: 'キャラC', count: 0 }
+        ];
 
-        likeBtn.addEventListener('click', () => {
-            count++;
-            countSpan.textContent = count;
+        // ページを切り替える関数
+        function showPage(pageId) {
+            // すべてのページをいったん非表示にする
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // 指定されたページを表示する
+            document.getElementById(`page-${pageId}`).classList.add('active');
+
+            // ヘッダーのボタンやタイトルの調整
+            const backBtn = document.getElementById('backBtn');
+            if (pageId === 'top') {
+                backBtn.style.display = 'none';
+                document.getElementById('mainTitle').textContent = "My Favorite Characters";
+            } else {
+                backBtn.style.display = 'block';
+                const charData = characters.find(c => c.id === pageId);
+                document.getElementById('mainTitle').textContent = `${charData.name} の紹介`;
+            }
+            // ページを切り替えたら一番上にスクロール
+            window.scrollTo(0, 0);
+        }
+
+        // 「推す！」ボタンを押したときの処理
+        function pushLike(id) {
+            const target = characters.find(char => char.id === id);
+            if (target) {
+                target.count++;
+                document.getElementById(`count-${id}`).textContent = target.count;
+                updateRanking();
+            }
+        }
+
+        // ランキングの更新と表示（トップページ）
+        function updateRanking() {
+            const rankingList = document.getElementById('rankingList');
+            const sorted = [...characters].sort((a, b) => b.count - a.count);
             
-            // クリックしたときのプチアニメーション
-            likeBtn.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                likeBtn.style.transform = 'none';
-            }, 100);
-        });
+            rankingList.innerHTML = '';
+            
+            sorted.forEach((char, index) => {
+                const li = document.createElement('li');
+                // 順位に応じたクラス（色分け用）とクリックイベントを付与
+                li.className = `ranking-item rank-${index}`;
+                li.setAttribute('onclick', `showPage('${char.id}')`);
+                
+                const medals = ['🥇', '🥈', '🥉'];
+                const rankBadge = medals[index] || `${index + 1}位`;
+                
+                li.innerHTML = `
+                    <span>${rankBadge} ${char.name} <small style="font-weight:normal; color:#718096; margin-left:10px;">(詳細を見る)</small></span>
+                    <span>${char.count} P</span>
+                `;
+                rankingList.appendChild(li);
+            });
+        }
+
+        // 初期化
+        updateRanking();
     </script>
 </body>
 </html>
